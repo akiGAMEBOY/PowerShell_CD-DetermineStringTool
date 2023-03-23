@@ -51,17 +51,16 @@ Function ExpandString($target_str) {
 #################################################################################
 Function OpenCdtray($drive_full) {
     [System.Boolean]$return = $false
+    [System.String]$prompt_message = ''
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
 
     # CDトレイのオープン
-    [System.String]$prompt_message = ''
     try {
         (New-Object -com Shell.Application).Namespace(17).ParseName("${drive_full}").InvokeVerb("Eject")
         $return = $true
     }
     catch {
         $sbtemp=New-Object System.Text.StringBuilder
-        $prompt_message = ''
         @("エラー　　：CDトレイ オープン処理`r`n",`
           "　　　　　　処理が失敗しました。`r`n")|
         ForEach-Object{[void]$sbtemp.Append($_)}
@@ -91,7 +90,6 @@ Function InsertCD($label) {
     Write-Host $prompt_message -ForegroundColor DarkYellow
     
     $sbtemp=New-Object System.Text.StringBuilder
-    $prompt_message = ''
     @("確認　　　：処理続行の確認`r`n",`
       "　　　　　　CDをトレイに入れた後に応答し再開してください。処理を再開しますか？`r`n",`
       "　　　　　　[ y: はい、n: いいえ ]`r`n",`
@@ -168,10 +166,10 @@ Function ConfirmYesno($prompt_message) {
 #################################################################################
 Function ValidateDrive($drive) {
     [System.Boolean]$return = $false
+    [System.String]$prompt_message = ''
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
     [System.Boolean]$is_exists = $false
 
-    [System.String]$prompt_message = ''
     [System.Int32]$now = 1
     [System.Int32]$max = $c_wait_sec * $c_interval_sec
     [System.Management.Automation.PSDriveInfo]$psdrive = $null
@@ -183,7 +181,6 @@ Function ValidateDrive($drive) {
             if ($itemlist.Count -ge 1) {
                 $return = $true
                 $sbtemp=New-Object System.Text.StringBuilder
-                $prompt_message = ''
                 @("通知　　　：CDドライブの検証`r`n",`
                   "　　　　　　正常にCDドライブを認識しました。`r`n")|
                 ForEach-Object{[void]$sbtemp.Append($_)}
@@ -194,7 +191,6 @@ Function ValidateDrive($drive) {
             else {
                 $is_exists = $true
                 $sbtemp=New-Object System.Text.StringBuilder
-                $prompt_message = ''
                 @("エラー　　：CDドライブの検証`r`n",`
                   "　　　　　　CDドライブ内のデータがありませんでした。`r`n",`
                   "　　　　　　処理を中断します。`r`n")|
@@ -208,7 +204,6 @@ Function ValidateDrive($drive) {
         Start-Sleep $c_wait_sec
         $now = $c_wait_sec * $i
         $sbtemp=New-Object System.Text.StringBuilder
-        $prompt_message = ''
         @("通知　　　：CDドライブの検証`r`n",`
           "　　　　　　チェック中。　経過時間 / 待ち時間 [ ${now} / ${max} sec ]`r`n",`
           "　　　　　　CDを認識するまで少々、お待ちください。`r`n")|
@@ -219,7 +214,6 @@ Function ValidateDrive($drive) {
     # 待ち合わせたが、認識できなかった場合
     if ((-not $return) -And (-not $is_exists)) {
         $sbtemp=New-Object System.Text.StringBuilder
-        $prompt_message = ''
         @("エラー　　：CDドライブの検証`r`n",`
           "　　　　　　CDを認識できませんでした。`r`n",`
           "　　　　　　処理を中断します。`r`n")|
@@ -253,7 +247,6 @@ Function ValidateFileformat($drive_full) {
              ($item.Name.ToLower() -match '\.txt$')))) {
             $return = $false
             $sbtemp=New-Object System.Text.StringBuilder
-            $prompt_message = ''
             @("エラー　　：ファイル名の検証`r`n",`
               "　　　　　　既定のファイル名ではありません。`r`n",`
               "　　　　　　対象ファイル：[$($item.FullName)]`r`n")|
@@ -294,7 +287,6 @@ Function ValidateFiledetail($drive_full, $findrange, $findstring) {
         if ($compared.Count -ge 1) {
             $return = $true
             $sbtemp=New-Object System.Text.StringBuilder
-            $prompt_message = ''
             @("通知　　　：ファイルの詳細を検証`r`n",`
               "　　　　　　検証結果：成功（$(($without_ext))）`r`n",`
               "　　　　　　検索の文字列「$(($findstring))」が見つかりました。`r`n",`
@@ -306,7 +298,6 @@ Function ValidateFiledetail($drive_full, $findrange, $findstring) {
         else {
             $return = $false
             $sbtemp=New-Object System.Text.StringBuilder
-            $prompt_message = ''
             @("エラー　　：ファイルの詳細を検証`r`n",`
               "　　　　　　検証結果：失敗（$(($without_ext))）`r`n",`
               "　　　　　　検索の文字列「$(($findstring))」が見つかりませんでした。`r`n",`
@@ -335,7 +326,6 @@ Function ConfirmLoop() {
     $return = $true
 
     # くり返し有無を確認
-    $prompt_message = ''
     @("確認　　　：くり返し有無の確認`r`n",`
       "　　　　　　処理が終了しました。続けて処理しますか？`r`n",`
       "　　　　　　[ y: はい、n: いいえ ]`r`n",`

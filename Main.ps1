@@ -14,11 +14,12 @@
 # 引数　　｜-
 #################################################################################
 # 定数
-$c_config_file = "setup.ini"
-$c_cdlabel = "集計データ"
-$c_retry_count = 3
-$c_interval_sec = 10
-$c_wait_sec = 3
+[System.String]$c_config_file = "setup.ini"
+[System.String]$c_cdlabel = "集計データ"
+[System.Int32]$c_retry_count = 3
+[System.Int32]$c_interval_sec = 10
+[System.Int32]$c_wait_sec = 3
+[System.Int32]$c_for_count = 50
 
 # Function
 #################################################################################
@@ -343,7 +344,9 @@ Function ConfirmLoop() {
     ForEach-Object{[void]$sbtemp.Append($_)}
     $prompt_message = $sbtemp.ToString()
 
+    # YesNo入力
     $return = ConfirmYesno $prompt_message
+
     return $return
 }
 
@@ -413,7 +416,8 @@ if ($result -eq 0) {
 }
 
 # くり返し開始
-While ($true) {
+[System.Int32]$count = 0
+for ($count = 1; $count -le $c_for_count; $count++) {
     # CDトレイにCDメディアを手動で挿入（セット）
     if ($result -eq 0) {
         $return = $false

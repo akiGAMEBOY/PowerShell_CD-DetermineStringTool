@@ -35,6 +35,7 @@ Function ExpandString($target_str) {
     If ($target_str.Length -ge 2) {
         if (($target_str.Substring(0, 1) -eq "`"") -and
             ($target_str.Substring($target_str.Length - 1, 1) -eq "`"")) {
+            # ダブルクォーテーション削除
             $expand_str = $target_str.Substring(1, $target_str.Length - 2)
            }
     }
@@ -360,7 +361,7 @@ $sbtemp=New-Object System.Text.StringBuilder
   "\",`
   "$c_config_file")|
 ForEach-Object{[void]$sbtemp.Append($_)}
-$config_fullpath = $sbtemp.ToString()
+[System.String]$config_fullpath = $sbtemp.ToString()
 
 try {
     [System.Collections.Hashtable]$param = Get-Content $config_fullpath -Raw | ConvertFrom-StringData

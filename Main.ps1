@@ -29,7 +29,7 @@
 # 戻り値　｜String（展開後の文字列）
 # 引数　　｜target_str: 対象文字列
 #################################################################################
-Function ExpandString($target_str) {
+Function ExpandString([System.String]$target_str) {
     [System.String]$expand_str = $target_str
     
     If ($target_str.Length -ge 2) {
@@ -50,7 +50,7 @@ Function ExpandString($target_str) {
 # 戻り値　｜Boolean（True: 正常終了, False: 異常終了）
 # 引数　　｜drive_full: 対象ドライブ
 #################################################################################
-Function OpenCdtray($drive_full) {
+Function OpenCdtray([System.String]$drive_full) {
     [System.Boolean]$return = $false
     [System.String]$prompt_message = ''
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
@@ -79,7 +79,7 @@ Function OpenCdtray($drive_full) {
 # 戻り値　｜Boolean（True: 正常終了, False: 処理中断）
 # 引数　　｜label: 対象CDのラベル名
 #################################################################################
-Function InsertCD($label) {
+Function InsertCD([System.String]$label) {
     [System.Boolean]$return = $false
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
     [System.String]$prompt_message = ''
@@ -112,7 +112,7 @@ Function InsertCD($label) {
 # 戻り値　｜Boolean（True: 正常終了, False: 処理中断）
 # 引数　　｜prompt_message: 入力応答待ち時のメッセージ内容
 #################################################################################
-Function ConfirmYesno($prompt_message) {
+Function ConfirmYesno([System.String]$prompt_message) {
     [System.Boolean]$return = $false
     [System.String]$value = $null
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
@@ -165,7 +165,7 @@ Function ConfirmYesno($prompt_message) {
 # 戻り値　｜Boolean（True: 正常終了, False: 異常終了）
 # 引数　　｜drive: 対象ドライブ（ドライブレターのみ）, drive_full: 対象ドライブ
 #################################################################################
-Function ValidateDrive($drive) {
+Function ValidateDrive([System.String]$drive, [System.String]$drive_full) {
     [System.Boolean]$return = $false
     [System.String]$prompt_message = ''
     [System.Text.StringBuilder]$sbtemp=New-Object System.Text.StringBuilder
@@ -175,7 +175,7 @@ Function ValidateDrive($drive) {
     [System.Int32]$max = $c_wait_sec * $c_interval_sec
     [System.Management.Automation.PSDriveInfo]$psdrive = $null
     for($i=1; $i -le $c_interval_sec; $i++) {
-        $psdrive = Get-PSDrive $drive 2>$null
+        $psdrive = Get-PSDrive $drive 2> $null
         if ($null -ne $psdrive) {
             [Object[]]$itemlist = Get-ChildItem "${drive_full}" | Sort-Object -Descending {$_.Name}
             # CD内のファイル件数をカウント
@@ -233,7 +233,7 @@ Function ValidateDrive($drive) {
 # 戻り値　｜Boolean（True: 正常終了, False: 異常終了）
 # 引数　　｜drive_full: 対象ドライブ
 #################################################################################
-Function ValidateFileformat($drive_full) {
+Function ValidateFileformat([System.String]$drive_full) {
     [System.Boolean]$return = $false
 
     # ファイルの命名規則をチェック
@@ -268,7 +268,7 @@ Function ValidateFileformat($drive_full) {
 # 戻り値　｜Boolean（True: 正常終了, False: 異常終了）
 # 引数　　｜drive_full: 対象ドライブ, findrange: 検索範囲, findstring: 検索文字列
 #################################################################################
-Function ValidateFiledetail($drive_full, $findrange, $findstring) {
+Function ValidateFiledetail([System.String]$drive_full, [System.Int32]$findrange, [System.String]$findstring) {
     [System.Boolean]$return = $false
     
     [System.String]$without_ext = ''

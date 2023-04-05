@@ -33,7 +33,7 @@ Function ExpandString([System.String]$target_str) {
     [System.String]$expand_str = $target_str
     
     If ($target_str.Length -ge 2) {
-        if (($target_str.Substring(0, 1) -eq "`"") -and
+        if (($target_str.Substring(0, 1) -eq "`"") -And
             ($target_str.Substring($target_str.Length - 1, 1) -eq "`"")) {
             # ダブルクォーテーション削除
             $expand_str = $target_str.Substring(1, $target_str.Length - 2)
@@ -213,7 +213,7 @@ Function ValidateDrive([System.String]$drive, [System.String]$drive_full) {
         Write-Host $prompt_message
     }
     # 待ち合わせたが、認識できなかった場合
-    if ((-not $return) -And (-not $is_exists)) {
+    if ((-Not $return) -And (-Not $is_exists)) {
         $sbtemp=New-Object System.Text.StringBuilder
         @("エラー　　: CDドライブの検証`r`n",`
           "　　　　　　CDを認識できませんでした。`r`n",`
@@ -243,7 +243,7 @@ Function ValidateFileformat([System.String]$drive_full) {
         # ファイル名が下記の通りである事を検証
         #   1～4桁目　　: アルファベット（大文字・小文字を区別しない）
         #   ファイル種類: csvファイル or テキストファイル
-        if (-not(($item.Name -match '^[A-z][A-z][A-z][A-z]') -And `
+        if (-Not(($item.Name -match '^[A-z][A-z][A-z][A-z]') -And `
             (($item.Name.ToLower() -match '\.csv$') -Or `
              ($item.Name.ToLower() -match '\.txt$')))) {
             $return = $false
@@ -401,7 +401,7 @@ catch {
 if ($result -eq 0) {
     $return = $false
     $return = OpenCdtray($drive_full)
-    if (-not $return) {
+    if (-Not $return) {
         $result = -201
     }
 }
@@ -414,7 +414,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
         $return = $false
         $return = InsertCD $c_cdlabel
 
-        if (-not $return) {
+        if (-Not $return) {
             $result = -301
         }
     }
@@ -424,7 +424,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
         $return = $false
         $return = ValidateDrive $drive $drive_full
 
-        if (-not $return) {
+        if (-Not $return) {
             $result = -401
         }
     }
@@ -434,7 +434,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
         $return = $false
         $return = ValidateFileformat $drive_full
 
-        if (-not $return) {
+        if (-Not $return) {
             $result = -402
         }
     }
@@ -443,7 +443,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
     if ($result -eq 0) {
         $return = $false
         $return = ValidateFiledetail $drive_full $findrange $findstring
-        if (-not $return) {
+        if (-Not $return) {
             $result = -403
         }
     }
@@ -451,7 +451,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
     # CDトレイを自動でオープン（くり返し終了前）
     if ($result -ne -201) {
         $return = OpenCdtray $drive_full
-        if (-not $return) {
+        if (-Not $return) {
             $result = -501
         }
     }
@@ -480,7 +480,7 @@ for ($count = 1; $count -le $c_for_count; $count++) {
         $return = ConfirmLoop
     }
     # 異常終了、または処理中断した場合はくり返し終了
-    if (-not $return) {
+    if (-Not $return) {
         break
     }
 }

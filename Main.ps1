@@ -364,7 +364,7 @@ ForEach-Object{[void]$sbtemp.Append($_)}
 [System.String]$config_fullpath = $sbtemp.ToString()
 
 try {
-    [System.Collections.Hashtable]$param = Get-Content $config_fullpath -Raw | ConvertFrom-StringData
+    [System.Collections.Hashtable]$param = Get-Content $config_fullpath -Raw -Encoding UTF8 | ConvertFrom-StringData
     # ドライブパス作成
     [System.String]$drive = $param.DriveLatter
     [System.String]$drive_full = ''
